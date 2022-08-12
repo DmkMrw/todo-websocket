@@ -27,8 +27,11 @@ function App() {
 
   }, []);
 
-  const removeTask = (id) => {
-    setTasks((tasks) => tasks.filter((task) => task.id !== id));
+  const removeTask = (taskId, local) => {
+    setTasks((tasks) => tasks.filter((task) => task.id !== taskId));
+    if (local) {
+      socket.emit('removeTask', taskId);
+    };
   };
 
   const submitForm = (e) => {
@@ -59,7 +62,7 @@ function App() {
       <h2>Tasks</h2>
 
       <ul className="tasks-section__list" id="tasks-list">
-        {tasks.map(task => <li key={task.id} className='task'>{task.name}<button className="btn btn--red" onClick={()=>removeTask(task.id)}>Remove</button></li>)}
+        {tasks.map(task => <li key={task.id} className='task'>{task.name}<button className="btn btn--red" onClick={()=>removeTask(task.id, true)}>Remove</button></li>)}
       </ul>
 
       <form id="add-task-form" onSubmit={(e)=> submitForm(e)}>
